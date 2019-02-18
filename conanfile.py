@@ -48,15 +48,21 @@ class LibnslConan(ConanFile):
         ]
         if not self.options.shared:
             conf_args.append("--with-pic" if self.options.fPIC else "--without-pic")
-        autotools = AutoToolsBuildEnvironment(self)
-        autotools.configure(configure_dir=os.path.join(self.source_folder, self._source_subfolder), args=conf_args)
-        autotools.make()
+        if self.should_build:
+            autotools = AutoToolsBuildEnvironment(self)
+            if self.compiler in ("gcc", "clang", ):
+                autotools.libs.append("pthread")
+            autotools.configure(configure_dir=os.path.join(self.source_folder, self._source_subfolder), args=conf_args)
+            autotools.make()
 
     def package(self):
-        with tools.chdir(self.build_folder):
-            autotools = AutoToolsBuildEnvironment(self)
-            autotools.install()
+        if self.should_install:
+            with tools.chdir(self.build_folder):
+                autotools = AutoToolsBuildEnvironment(self)
+                autotools.install()
 
     def package_info(self):
         self.cpp_info.includedirs = ["include", "include/libnsl"]
-        self.cpp_info.libs = ["nsl", "pthread"]
+        self.cpp_info.libs = tools.collect_libs(self)
+        if self.compiler in ("gcc", "clang", ):
+            self.cpp_info.libs.append("pthread")
