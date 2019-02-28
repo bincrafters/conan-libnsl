@@ -30,6 +30,7 @@ class Libnsl2Conan(ConanFile):
         "fPIC": True,
     }
     _source_subfolder = "sources"
+    generators = "pkg_config",
 
     def config_options(self):
         del self.settings.compiler.libcxx
@@ -59,6 +60,10 @@ class Libnsl2Conan(ConanFile):
         tools.untargz(dlfilepath)
         extracted_dir = "{}-{}".format(name, self.version)
         os.rename(extracted_dir, self._source_subfolder)
+
+        tools.replace_in_file(os.path.join(self.source_folder, self._source_subfolder, "po", "Makefile.in.in"),
+                              "GETTEXT_MACRO_VERSION = 0.19",
+                              "GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@")
 
         with tools.chdir(os.path.join(self.source_folder, self._source_subfolder)):
             self.run("./autogen.sh", win_bash=tools.os_info.is_windows)  # needs gettext-devel on fedora linux
