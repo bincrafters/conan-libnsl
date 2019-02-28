@@ -96,5 +96,5 @@ class Libnsl2Conan(ConanFile):
     def package_info(self):
         self.cpp_info.includedirs = ["include", "include/libnsl"]
         self.cpp_info.libs = tools.collect_libs(self)
-        if self.compiler in ("gcc", "clang", ):
+        if self.settings.compiler in ("gcc", "clang", ):
             self.cpp_info.libs.append("pthread")
