@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from conans import ConanFile, AutoToolsBuildEnvironment, tools
+from conans.util.env_reader import get_env
+
 import os
+import shutil
+import tempfile
 
 
-class LibnslConan(ConanFile):
-    name = "libnsl"
+class Libnsl2Conan(ConanFile):
+    name = "libnsl2"
     version = "1.2.0"
     description = "libnsl contains the public client interface for NIS(YP) and NIS+ in a IPv6 ready version"
     topics = ("conan", "libnsl", "RPC")
@@ -14,6 +18,9 @@ class LibnslConan(ConanFile):
     author = "Bincrafters <bincrafters@gmail.com>"
     license = "LGPL-2.1"
     settings = "os", "compiler", "build_type", "arch"
+    exports_sources = (
+        "LICENSE.md",
+    )
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
@@ -23,22 +30,38 @@ class LibnslConan(ConanFile):
         "fPIC": True,
     }
     _source_subfolder = "sources"
-    requires = ("libtirpc/1.1.4@bincrafters/stable", )
 
     def config_options(self):
         del self.settings.compiler.libcxx
         if self.options.shared:
             del self.options.fPIC
 
+    def requirements(self):
+        self.requires("libtirpc/1.1.4@bincrafters/stable")
+
+    def build_requirements(self):
+        if tools.os_info.is_windows:
+            self.build_requires("msys2_installer/20161025@bincrafters/stable")
+
     def source(self):
-        url = "https://github.com/thkukuk/{name}/archive/v{version}.tar.gz".format(
-            name=self.name, version=self.version
-        )
+        name = "libnsl"
+        filename = "{}-{}.tar.gz".format(self.name, self.version)
+        url = "https://github.com/thkukuk/{}/archive/v{}.tar.gz".format(name, self.version)
         sha256 = "a5a28ef17c4ca23a005a729257c959620b09f8c7f99d0edbfe2eb6b06bafd3f8"
-        tools.get(url, sha256=sha256)
-        os.rename("{}-{}".format(self.name, self.version), self._source_subfolder)
+
+        dlfilepath = os.path.join(tempfile.gettempdir(), filename)
+        if os.path.exists(dlfilepath) and not get_env("LIBNSL2_FORCE_DOWNLOAD", False):
+            self.output.info("Skipping download. Using cached {}".format(dlfilepath))
+        else:
+            self.output.info("Downloading {} from {}".format(self.name, url))
+            tools.download(url, dlfilepath)
+        tools.check_sha256(dlfilepath, sha256)
+        tools.untargz(dlfilepath)
+        extracted_dir = "{}-{}".format(name, self.version)
+        os.rename(extracted_dir, self._source_subfolder)
+
         with tools.chdir(os.path.join(self.source_folder, self._source_subfolder)):
-            self.run("./autogen.sh")  # needs gettext-devel on fedora linux
+            self.run("./autogen.sh", win_bash=tools.os_info.is_windows)  # needs gettext-devel on fedora linux
 
     def build(self):
         conf_args = [
@@ -49,8 +72,8 @@ class LibnslConan(ConanFile):
         if not self.options.shared:
             conf_args.append("--with-pic" if self.options.fPIC else "--without-pic")
         if self.should_build:
-            autotools = AutoToolsBuildEnvironment(self)
-            if self.compiler in ("gcc", "clang", ):
+            autotools = AutoToolsBuildEnvironment(self, win_bash=tools.os_info.is_windows)
+            if self.settings.compiler in ("gcc", "clang", ):
                 autotools.libs.append("pthread")
             autotools.configure(configure_dir=os.path.join(self.source_folder, self._source_subfolder), args=conf_args)
             autotools.make()
@@ -60,6 +83,10 @@ class LibnslConan(ConanFile):
             with tools.chdir(self.build_folder):
                 autotools = AutoToolsBuildEnvironment(self)
                 autotools.install()
+        shutil.rmtree(os.path.join(self.package_folder, "lib", "pkgconfig"))
+
+        self.copy("LICENSE.md", src=self.source_folder, dst="licenses")
+        self.copy("COPYING", src=os.path.join(self.source_folder, self._source_subfolder), dst="licenses")
 
     def package_info(self):
         self.cpp_info.includedirs = ["include", "include/libnsl"]
