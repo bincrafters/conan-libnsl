@@ -89,6 +89,9 @@ class Libnsl2Conan(ConanFile):
                 autotools = AutoToolsBuildEnvironment(self)
                 autotools.install()
         shutil.rmtree(os.path.join(self.package_folder, "lib", "pkgconfig"))
+        libtool_path = os.path.join(self.package_folder, "lib", "libnsl.la")
+        if os.path.exists(libtool_path):
+            os.remove(libtool_path)
 
         self.copy("LICENSE.md", src=self.source_folder, dst="licenses")
         self.copy("COPYING", src=os.path.join(self.source_folder, self._source_subfolder), dst="licenses")
