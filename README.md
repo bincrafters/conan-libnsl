@@ -1,27 +1,27 @@
-[![Download](https://api.bintray.com/packages/bincrafters/public-conan/libnsl%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/libnsl%3Abincrafters/_latestVersion)
-[![Build Status](https://travis-ci.org/bincrafters/conan-libnsl.svg?branch=stable%2F1.2.0)](https://travis-ci.org/bincrafters/conan-libnsl)
+[![Download](https://api.bintray.com/packages/bincrafters/public-conan/libnsl2%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/libnsl2%3Abincrafters/_latestVersion)
+[![Build Status](https://travis-ci.org/bincrafters/conan-libnsl2.svg?branch=stable%2F1.2.0)](https://travis-ci.org/bincrafters/conan-libnsl2)
 
-[Conan.io](https://conan.io) package recipe for [*libnsl*](https://github.com/thkukuk/libnsl/).
+[Conan.io](https://conan.io) package recipe for [*libnsl2*](https://github.com/thkukuk/libnsl/).
 
 libnsl contains the public client interface for NIS(YP) and NIS+ in a IPv6 ready version
 
-The packages generated with this **conanfile** can be found on [Bintray](https://bintray.com/bincrafters/public-conan/libnsl%3Abincrafters).
+The packages generated with this **conanfile** can be found on [Bintray](https://bintray.com/bincrafters/public-conan/libnsl2%3Abincrafters).
 
 ## For Users: Use this package
 
 ### Basic setup
 
-    $ conan install libnsl/1.2.0@bincrafters/stable
+    $ conan install libnsl2/1.2.0@bincrafters/stable
 
 ### Project setup
 
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
 
     [requires]
-    libnsl/1.2.0@bincrafters/stable
+    libnsl2/1.2.0@bincrafters/stable
 
     [generators]
-    txt
+    pkg_config
 
 Complete the installation of requirements for your project running:
 
@@ -52,12 +52,12 @@ The following command both runs all the steps of the conan file, and publishes t
 
 ## Upload
 
-    $ conan upload libnsl/1.2.0@bincrafters/stable --all -r bincrafters
+    $ conan upload libnsl2/1.2.0@bincrafters/stable --all -r bincrafters
 
 
 ## Conan Recipe License
 
-NOTE: The conan recipe license applies only to the files of this recipe, which can be used to build and package libnsl.
+NOTE: The conan recipe license applies only to the files of this recipe, which can be used to build and package libnsl2.
 It does *not* in any way apply or is related to the actual software being packaged.
 
 [MIT](https://github.com/bincrafters/conan-libnsl.git/blob/testing/1.2.0/LICENSE)
