@@ -40,10 +40,6 @@ class Libnsl2Conan(ConanFile):
     def requirements(self):
         self.requires("libtirpc/1.1.4@bincrafters/stable")
 
-    def build_requirements(self):
-        if tools.os_info.is_windows:
-            self.build_requires("msys2_installer/20161025@bincrafters/stable")
-
     def source(self):
         name = "libnsl"
         filename = "{}-{}.tar.gz".format(self.name, self.version)
