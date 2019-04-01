@@ -8,8 +8,8 @@ import shutil
 import tempfile
 
 
-class Libnsl2Conan(ConanFile):
-    name = "libnsl2"
+class LibnslConan(ConanFile):
+    name = "libnsl"
     version = "1.2.0"
     description = "libnsl contains the public client interface for NIS(YP) and NIS+ in a IPv6 ready version"
     topics = ("conan", "libnsl", "RPC")
