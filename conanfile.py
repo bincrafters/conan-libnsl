@@ -41,20 +41,11 @@ class LibnslConan(ConanFile):
         self.requires("libtirpc/1.1.4@bincrafters/stable")
 
     def source(self):
-        name = "libnsl"
-        filename = "{}-{}.tar.gz".format(self.name, self.version)
-        url = "https://github.com/thkukuk/{}/archive/v{}.tar.gz".format(name, self.version)
         sha256 = "a5a28ef17c4ca23a005a729257c959620b09f8c7f99d0edbfe2eb6b06bafd3f8"
 
-        dlfilepath = os.path.join(tempfile.gettempdir(), filename)
-        if os.path.exists(dlfilepath) and not get_env("LIBNSL2_FORCE_DOWNLOAD", False):
-            self.output.info("Skipping download. Using cached {}".format(dlfilepath))
-        else:
-            self.output.info("Downloading {} from {}".format(self.name, url))
-            tools.download(url, dlfilepath)
-        tools.check_sha256(dlfilepath, sha256)
-        tools.untargz(dlfilepath)
-        extracted_dir = "{}-{}".format(name, self.version)
+        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256=sha256)
+        extracted_dir = self.name + "-" + self.version
+
         os.rename(extracted_dir, self._source_subfolder)
 
         tools.replace_in_file(os.path.join(self.source_folder, self._source_subfolder, "po", "Makefile.in.in"),
