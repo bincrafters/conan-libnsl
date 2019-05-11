@@ -1,7 +1,7 @@
 [![Download](https://api.bintray.com/packages/bincrafters/public-conan/libnsl%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/libnsl%3Abincrafters/_latestVersion)
 [![Build Status](https://travis-ci.com/bincrafters/conan-libnsl.svg?branch=stable%2F1.2.0)](https://travis-ci.com/bincrafters/conan-libnsl)
 
-[Conan.io](https://conan.io) package recipe for [*libnsl*](https://github.com/thkukuk/libnsl/).
+[Conan](https://conan.io) package recipe for [*libnsl*](https://github.com/thkukuk/libnsl/).
 
 libnsl contains the public client interface for NIS(YP) and NIS+ in a IPv6 ready version
 
