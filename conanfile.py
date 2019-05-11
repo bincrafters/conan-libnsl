@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from conans import ConanFile, AutoToolsBuildEnvironment, tools
-from conans.util.env_reader import get_env
 
 import os
 import shutil
-import tempfile
 
 
 class LibnslConan(ConanFile):
