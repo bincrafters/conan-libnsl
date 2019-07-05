@@ -27,7 +27,7 @@ class LibnslConan(ConanFile):
         "shared": False,
         "fPIC": True,
     }
-    _source_subfolder = "sources"
+    _source_subfolder = "source_subfolder"
     generators = "pkg_config",
 
     def config_options(self):
@@ -57,7 +57,6 @@ class LibnslConan(ConanFile):
         conf_args = [
             "--disable-static" if self.options.shared else "--enable-static",
             "--enable-shared" if self.options.shared else "--disable-shared",
-            "--disable-static" if self.options.shared else "--enable-static",
         ]
         if not self.options.shared:
             conf_args.append("--with-pic" if self.options.fPIC else "--without-pic")
@@ -78,11 +77,10 @@ class LibnslConan(ConanFile):
         if os.path.exists(libtool_path):
             os.remove(libtool_path)
 
-        self.copy("LICENSE.md", src=self.source_folder, dst="licenses")
         self.copy("COPYING", src=os.path.join(self.source_folder, self._source_subfolder), dst="licenses")
 
     def package_info(self):
-        self.cpp_info.includedirs = ["include", "include/libnsl"]
+        self.cpp_info.includedirs = ["include", os.path.join("include", "rpcsvc")]
         self.cpp_info.libs = tools.collect_libs(self)
         if self.settings.compiler in ("gcc", "clang", ):
             self.cpp_info.libs.append("pthread")
