@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from conans import ConanFile, AutoToolsBuildEnvironment, tools
+from conans.errors import ConanInvalidConfiguration
 
 import os
-import shutil
 
 
 class LibnslConan(ConanFile):
@@ -31,9 +31,13 @@ class LibnslConan(ConanFile):
     generators = "pkg_config",
 
     def config_options(self):
-        del self.settings.compiler.libcxx
         if self.options.shared:
             del self.options.fPIC
+
+    def configure(self):
+        del self.settings.compiler.libcxx
+        if self.settings.os != "Linux":
+            raise ConanInvalidConfiguration("libnsl is only supported by Linux.")
 
     def requirements(self):
         self.requires("libtirpc/1.1.4@bincrafters/stable")
@@ -73,7 +77,7 @@ class LibnslConan(ConanFile):
             with tools.chdir(self.build_folder):
                 autotools = AutoToolsBuildEnvironment(self)
                 autotools.install()
-        shutil.rmtree(os.path.join(self.package_folder, "lib", "pkgconfig"))
+        tools.rmdir(os.path.join(self.package_folder, "lib", "pkgconfig"))
         libtool_path = os.path.join(self.package_folder, "lib", "libnsl.la")
         if os.path.exists(libtool_path):
             os.remove(libtool_path)
