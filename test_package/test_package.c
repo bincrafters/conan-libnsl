@@ -1,9 +1,9 @@
-#include <rpc/rpc.h>
+#include <rpcsvc/nis.h>
 
-#define PROGNUM 100
-#define VERSNUM 1
+#include <stdio.h>
 
 int main(int argc, char *argv[]) {
-    svc_unreg(PROGNUM, VERSNUM);
+    printf("nis_local_host: %s\n", nis_local_host());
+    printf("nis_local_directory: %s\n", nis_local_directory());
     return 0;
 }
