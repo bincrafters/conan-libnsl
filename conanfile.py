@@ -11,7 +11,6 @@ class LibnslConan(ConanFile):
     topics = ("conan", "libnsl", "RPC")
     url = "https://github.com/bincrafters/conan-libnsl"
     homepage = "https://github.com/thkukuk/libnsl/"
-    author = "Bincrafters <bincrafters@gmail.com>"
     license = "LGPL-2.1"
     settings = "os", "compiler", "build_type", "arch"
     exports_sources = (
