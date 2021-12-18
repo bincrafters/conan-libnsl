@@ -18,6 +18,6 @@ class TclTestConan(ConanFile):
         self.copy("*.so*", dst="bin", src="lib")
 
     def test(self):
-        if not tools.cross_building(self.settings):
+        if not tools.cross_building(self):
             bin_path = os.path.join("bin", "test_package")
             self.run(bin_path, run_environment=True)
